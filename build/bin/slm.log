@@ -1,7 +1,0 @@
-2025-09-01T08:58:47.767-0400	INFO	based-app/main.go:41	SLM starts
-2025-09-01T08:58:47.769-0400	INFO	based-app/main.go:42	Executable: C:\Codes\based-app\build\bin\based-app-dev.exe
-2025-09-01T08:58:47.769-0400	INFO	based-app/main.go:43	Working directory: C:\Codes\based-app\build\bin
-2025-09-01T08:58:47.769-0400	INFO	console/console-flags.go:112	[Flag -m: <missing>]
-2025-09-01T08:58:47.769-0400	INFO	console/console-flags.go:112	[Flag -f: <missing>]
-2025-09-01T08:58:47.769-0400	INFO	console/console-flags.go:112	[Flag -r: <missing>]
-2025-09-01T08:58:47.769-0400	INFO	console/console-flags.go:112	[Flag -e: <missing>]

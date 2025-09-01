@@ -1,0 +1,2 @@
+# Ignore build artifacts produced by the build/ directory
+/build/bin/
