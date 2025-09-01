@@ -10,9 +10,12 @@ import (
 	"strings"
 
 	"github.com/firebat20/based-app/console"
-	"github.com/firebat20/based-app/db"
-	"github.com/firebat20/based-app/process"
+
 	"github.com/firebat20/based-app/settings"
+
+	"github.com/firebat20/based-app/process"
+
+	"github.com/firebat20/based-app/db"
 
 	"github.com/jedib0t/go-pretty/v6/table"
 	"github.com/schollz/progressbar/v3"

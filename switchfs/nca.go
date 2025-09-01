@@ -9,8 +9,9 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/firebat20/based-app/settings"
 	"github.com/firebat20/based-app/switchfs/_crypto"
+
+	"github.com/firebat20/based-app/settings"
 )
 
 const (

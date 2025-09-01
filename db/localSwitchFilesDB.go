@@ -11,8 +11,9 @@ import (
 	"strings"
 
 	"github.com/firebat20/based-app/fileio"
-	"github.com/firebat20/based-app/settings"
 	"github.com/firebat20/based-app/switchfs"
+
+	"github.com/firebat20/based-app/settings"
 
 	"go.uber.org/zap"
 )

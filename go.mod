@@ -1,4 +1,4 @@
-module based-app
+module github.com/firebat20/based-app
 
 go 1.25
 

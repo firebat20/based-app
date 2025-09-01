@@ -6,9 +6,11 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/firebat20/based-app/db"
-	"github.com/firebat20/based-app/process"
 	"github.com/firebat20/based-app/settings"
+
+	"github.com/firebat20/based-app/process"
+
+	"github.com/firebat20/based-app/db"
 
 	"github.com/wailsapp/wails/v2/pkg/runtime"
 	"go.uber.org/zap"

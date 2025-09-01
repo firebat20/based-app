@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/firebat20/based-app/console"
+
 	"github.com/firebat20/based-app/settings"
 
 	"go.uber.org/zap"

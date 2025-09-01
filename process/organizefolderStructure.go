@@ -8,8 +8,9 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/firebat20/based-app/db"
 	"github.com/firebat20/based-app/settings"
+
+	"github.com/firebat20/based-app/db"
 
 	"go.uber.org/zap"
 	"robpike.io/nihongo"
