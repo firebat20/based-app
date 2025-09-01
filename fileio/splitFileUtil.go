@@ -4,7 +4,7 @@ import (
 	"errors"
 	"os"
 
-	"based-app/switchfs"
+	"github.com/firebat20/based-app/switchfs"
 )
 
 func ReadSplitFileMetadata(filePath string) (map[string]*switchfs.ContentMetaAttributes, error) {

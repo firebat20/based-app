@@ -7,7 +7,7 @@ import (
 	"log"
 	"path/filepath"
 
-	"based-app/settings"
+	"github.com/firebat20/based-app/settings"
 
 	bolt "go.etcd.io/bbolt"
 	"go.uber.org/zap"

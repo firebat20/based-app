@@ -4,7 +4,7 @@ import (
 	"embed"
 	"log"
 
-	"based-app/db"
+	"github.com/firebat20/based-app/db"
 
 	"github.com/wailsapp/wails/v2"
 	"github.com/wailsapp/wails/v2/pkg/logger"

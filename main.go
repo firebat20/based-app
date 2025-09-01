@@ -8,8 +8,8 @@ import (
 	"runtime"
 	"strings"
 
-	"based-app/console"
-	"based-app/settings"
+	"github.com/firebat20/based-app/console"
+	"github.com/firebat20/based-app/settings"
 
 	"go.uber.org/zap"
 )

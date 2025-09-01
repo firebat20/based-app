@@ -6,7 +6,7 @@ import (
 	"encoding/hex"
 	"strconv"
 
-	"based-app/switchfs/_crypto"
+	"github.com/firebat20/based-app/switchfs/_crypto"
 )
 
 //https://switchbrew.org/wiki/NCA_Format

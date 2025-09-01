@@ -10,9 +10,9 @@ import (
 	"strconv"
 	"strings"
 
-	"based-app/fileio"
-	"based-app/settings"
-	"based-app/switchfs"
+	"github.com/firebat20/based-app/fileio"
+	"github.com/firebat20/based-app/settings"
+	"github.com/firebat20/based-app/switchfs"
 
 	"go.uber.org/zap"
 )

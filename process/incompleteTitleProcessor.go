@@ -5,8 +5,8 @@ import (
 	"sort"
 	"strconv"
 
-	"based-app/db"
-	"based-app/switchfs"
+	"github.com/firebat20/based-app/db"
+	"github.com/firebat20/based-app/switchfs"
 
 	"go.uber.org/zap"
 )

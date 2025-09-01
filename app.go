@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"based-app/db"
+	"github.com/firebat20/based-app/db"
 
 	"go.uber.org/zap"
 )
