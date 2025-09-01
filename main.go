@@ -38,17 +38,11 @@ func main() {
 	defer logger.Sync() // flushes buffer, if any
 	sugar := logger.Sugar()
 
-	sugar.Info("[SLM starts]")
-	sugar.Infof("[Executable: %v]", exePath)
-	sugar.Infof("[Working directory: %v]", workingFolder)
-
-	// Determine if the frontend assets are present. Older builds used a generated AssetDir helper
-	// from go-bindata/rice; we now use go:embed in gui.go. Fall back to checking the filesystem
-	// for a local `frontend/dist` folder next to the executable.
-	distPath := filepath.Join(workingFolder, "frontend", "dist")
-	if _, err := os.Stat(distPath); os.IsNotExist(err) {
-		appSettings.GUI = false
-	}
+	sugar.Info("SLM starts")
+	sugar.Infof("Executable: %s", exePath)
+	sugar.Infof("Working directory: %s", workingFolder)
+	// Frontend assets are embedded with go:embed in gui.go, so the check for a
+	// local `frontend/dist` folder is no longer necessary.
 
 	console.InitializeFlags()
 	console.LogFlags(sugar)

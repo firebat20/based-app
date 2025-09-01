@@ -8,7 +8,7 @@
  "scan_folders": [
   "C:\\Users\\X1\\Downloads\\games2"
  ],
- "gui": false,
+ "gui": true,
  "debug": false,
  "check_for_missing_updates": true,
  "check_for_missing_dlc": true,

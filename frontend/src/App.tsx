@@ -1,10 +1,17 @@
 import { Button } from "@/components/ui/button"
-//import { Tabs } from "@/components/ui/tabs"
 //import { Progress } from "@/components/ui/progress"
 //import { Table } from "@/components/ui/table"
 import React from "react"
 
-
+import {
+  Menubar,
+  MenubarContent,
+  MenubarItem,
+  MenubarMenu,
+  MenubarSeparator,
+  MenubarShortcut,
+  MenubarTrigger,
+} from "@/components/ui/menubar"
 import {
   Tabs,
   TabsContent,
@@ -13,20 +20,39 @@ import {
 } from "@/components/ui/tabs"
 
 export function Topmenu() {
-
   return (
-    <div className="w-full">
-      <Tabs defaultValue="files">
-        <TabsList className="w-full justify-start gap-2 bg-black text-white">
-          <TabsTrigger className="text-white" value="files">FILE</TabsTrigger>
-          <TabsTrigger className="text-white" value="debug">DEBUG</TabsTrigger>
-          <TabsTrigger className="text-white" value="theme">THEME</TabsTrigger>
-        </TabsList>
-        <TabsContent className="mt-0" value="files"></TabsContent>
-        <TabsContent className="mt-0" value="debug"></TabsContent>
-        <TabsContent className="mt-0" value="theme"></TabsContent>
-      </Tabs>
-    </div>
+    <Menubar>
+      <MenubarMenu>
+        <MenubarTrigger>File</MenubarTrigger>
+        <MenubarContent>
+          <MenubarItem>
+            Open... <MenubarShortcut>⌘O</MenubarShortcut>
+          </MenubarItem>
+          <MenubarItem>Settings</MenubarItem>
+          <MenubarSeparator />
+          <MenubarItem>Exit</MenubarItem>
+        </MenubarContent>
+      </MenubarMenu>
+      <MenubarMenu>
+        <MenubarTrigger>Debug</MenubarTrigger>
+        <MenubarContent>
+          <MenubarItem>
+            Reload UI <MenubarShortcut>F5</MenubarShortcut>
+          </MenubarItem>
+          <MenubarItem>
+            Open DevTools <MenubarShortcut>F12</MenubarShortcut>
+          </MenubarItem>
+        </MenubarContent>
+      </MenubarMenu>
+      <MenubarMenu>
+        <MenubarTrigger>Theme</MenubarTrigger>
+        <MenubarContent>
+          <MenubarItem>Light</MenubarItem>
+          <MenubarItem>Dark</MenubarItem>
+          <MenubarItem>System</MenubarItem>
+        </MenubarContent>
+      </MenubarMenu>
+    </Menubar>
   )
 }
 

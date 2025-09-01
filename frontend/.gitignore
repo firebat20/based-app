@@ -12,8 +12,10 @@ dist
 dist-ssr
 *.local
 
+# Go build artifacts
+/build/bin
+
 # Editor directories and files
-./based-app/build/bin*
 .vscode/*
 !.vscode/extensions.json
 .idea

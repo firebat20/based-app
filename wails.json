@@ -9,5 +9,8 @@
   "author": {
     "name": "firebat20",
     "email": "63678935+firebat20@users.noreply.github.com"
+  },
+  "windows": {
+    "ldflags": "-H=windowsgui"
   }
 }

@@ -110,7 +110,11 @@ func (a *App) GetMissingDLC() string {
 		i++
 	}
 
-	msg, _ := json.Marshal(values)
+	msg, err := json.Marshal(values)
+	if err != nil {
+		a.sugarLogger.Errorf("Error marshalling missing DLCs: %v", err)
+		return "[]"
+	}
 	return string(msg)
 }
 
@@ -129,7 +133,11 @@ func (a *App) GetMissingUpdates() string {
 		i++
 	}
 
-	msg, _ := json.Marshal(values)
+	msg, err := json.Marshal(values)
+	if err != nil {
+		a.sugarLogger.Errorf("Error marshalling missing updates: %v", err)
+		return "[]"
+	}
 	return string(msg)
 }
 
@@ -174,6 +182,10 @@ func (a *App) buildLocalDB(ignoreCache bool) (*db.LocalSwitchFilesDB, error) {
 
 // OrganizeLibrary performs the organize operation.
 func (a *App) OrganizeLibrary() {
+	if a.localDB == nil || a.switchDB == nil {
+		runtime.EventsEmit(a.ctx, "error", "Library and Switch DB must be loaded before organizing.")
+		return
+	}
 	folderToScan := settings.ReadSettings(a.baseFolder).Folder
 	options := settings.ReadSettings(a.baseFolder).OrganizeOptions
 	if !process.IsOptionsValid(options) {
@@ -268,7 +280,11 @@ func (a *App) UpdateLocalLibrary(ignoreCache bool) string {
 	response.LibraryData = libraryData
 	response.NumFiles = localDB.NumFiles
 	response.Issues = issues
-	msg, _ := json.Marshal(response)
+	msg, err := json.Marshal(response)
+	if err != nil {
+		a.sugarLogger.Errorf("Error marshalling library data: %v", err)
+		return ""
+	}
 	if a.ctx != nil {
 		runtime.EventsEmit(a.ctx, "libraryLoaded", string(msg))
 	}
@@ -295,6 +311,9 @@ func (a *App) UpdateDB() error {
 
 // GetMissingGames returns a slice of SwitchTitle for missing games compared to local DB.
 func (a *App) GetMissingGames() ([]SwitchTitle, error) {
+	if a.switchDB == nil || a.localDB == nil {
+		return nil, errors.New("databases not initialized; please update library first")
+	}
 	var result []SwitchTitle
 	for k, v := range a.switchDB.TitlesMap {
 		if _, ok := a.localDB.TitlesMap[k]; ok {
