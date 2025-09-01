@@ -2,13 +2,15 @@ module based-app
 
 go 1.25
 
-require github.com/wailsapp/wails/v2 v2.10.2
+require (
+	github.com/wailsapp/wails/v2 v2.10.2
+	golang.org/x/mod v0.27.0
+)
 
 require (
 	github.com/avast/retry-go/v4 v4.6.1
 	github.com/jedib0t/go-pretty/v6 v6.6.8
 	github.com/magiconair/properties v1.8.10
-	github.com/mcuadros/go-version v0.0.0-20190830083331-035f6764e8d2
 	github.com/schollz/progressbar/v3 v3.18.0
 	github.com/wailsapp/go-webview2 v1.0.21 // indirect
 	go.etcd.io/bbolt v1.4.3

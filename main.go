@@ -1,85 +1,104 @@
 package main
 
 import (
-	"embed"
-	"log"
+	"fmt"
+	"net/url"
+	"os"
+	"path/filepath"
+	"runtime"
+	"strings"
 
-	"github.com/wailsapp/wails/v2"
-	"github.com/wailsapp/wails/v2/pkg/logger"
-	"github.com/wailsapp/wails/v2/pkg/options"
-	"github.com/wailsapp/wails/v2/pkg/options/assetserver"
-	"github.com/wailsapp/wails/v2/pkg/options/mac"
-	"github.com/wailsapp/wails/v2/pkg/options/windows"
+	"based-app/console"
+	"based-app/settings"
+
+	"go.uber.org/zap"
 )
 
-//go:embed all:frontend/dist
-var assets embed.FS
-
-//go:embed build/appicon.png
-var icon []byte
-
 func main() {
-	// Create an instance of the app structure
-	app := NewApp()
-
-	// Create application with options
-	err := wails.Run(&options.App{
-		Title:             "based-app",
-		Width:             1024,
-		Height:            768,
-		MinWidth:          800,
-		MinHeight:         600,
-		DisableResize:     false,
-		Fullscreen:        false,
-		Frameless:         false,
-		StartHidden:       false,
-		HideWindowOnClose: false,
-		BackgroundColour:  &options.RGBA{R: 255, G: 255, B: 255, A: 255},
-		AssetServer: &assetserver.Options{
-			Assets: assets,
-		},
-		Menu:             nil,
-		Logger:           nil,
-		LogLevel:         logger.DEBUG,
-		OnStartup:        app.startup,
-		OnDomReady:       app.domReady,
-		OnBeforeClose:    app.beforeClose,
-		OnShutdown:       app.shutdown,
-		WindowStartState: options.Normal,
-		Bind: []interface{}{
-			app,
-		},
-		// Windows platform specific options
-		Windows: &windows.Options{
-			WebviewIsTransparent: false,
-			WindowIsTranslucent:  false,
-			DisableWindowIcon:    false,
-			// DisableFramelessWindowDecorations: false,
-			WebviewUserDataPath: "",
-			ZoomFactor:          1.0,
-		},
-		// Mac platform specific options
-		Mac: &mac.Options{
-			TitleBar: &mac.TitleBar{
-				TitlebarAppearsTransparent: true,
-				HideTitle:                  false,
-				HideTitleBar:               false,
-				FullSizeContent:            false,
-				UseToolbar:                 false,
-				HideToolbarSeparator:       true,
-			},
-			Appearance:           mac.NSAppearanceNameDarkAqua,
-			WebviewIsTransparent: true,
-			WindowIsTranslucent:  true,
-			About: &mac.AboutInfo{
-				Title:   "based-app",
-				Message: "",
-				Icon:    icon,
-			},
-		},
-	})
-
+	exePath, err := os.Executable()
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println("failed to get executable directory, please ensure app has sufficient permissions. aborting")
+		return
 	}
+
+	workingFolder := filepath.Dir(exePath)
+
+	if runtime.GOOS == "darwin" {
+		if strings.Contains(workingFolder, ".app") {
+			appIndex := strings.Index(workingFolder, ".app")
+			sepIndex := strings.LastIndex(workingFolder[:appIndex], string(os.PathSeparator))
+			workingFolder = workingFolder[:sepIndex]
+		}
+	}
+
+	appSettings := settings.ReadSettings(workingFolder)
+
+	logger := createLogger(workingFolder, appSettings.Debug)
+
+	defer logger.Sync() // flushes buffer, if any
+	sugar := logger.Sugar()
+
+	sugar.Info("[SLM starts]")
+	sugar.Infof("[Executable: %v]", exePath)
+	sugar.Infof("[Working directory: %v]", workingFolder)
+
+	// Determine if the frontend assets are present. Older builds used a generated AssetDir helper
+	// from go-bindata/rice; we now use go:embed in gui.go. Fall back to checking the filesystem
+	// for a local `frontend/dist` folder next to the executable.
+	distPath := filepath.Join(workingFolder, "frontend", "dist")
+	if _, err := os.Stat(distPath); os.IsNotExist(err) {
+		appSettings.GUI = false
+	}
+
+	console.InitializeFlags()
+	console.LogFlags(sugar)
+
+	consoleFlags := console.GetFlagsValues()
+	useGUI := appSettings.GUI
+	if consoleFlags.Mode.IsSet() {
+		mode := consoleFlags.Mode.String()
+		if mode == "console" {
+			useGUI = false
+		} else if mode == "gui" {
+			useGUI = true
+		}
+	}
+
+	if useGUI {
+		CreateGUI(workingFolder, sugar)
+	} else {
+		console.FixConsoleOutput()
+		CreateConsole(workingFolder, sugar, consoleFlags).Start()
+	}
+}
+
+func createLogger(workingFolder string, debug bool) *zap.Logger {
+	var config zap.Config
+	if debug {
+		config = zap.NewDevelopmentConfig()
+	} else {
+		config = zap.NewDevelopmentConfig()
+		config.Level = zap.NewAtomicLevelAt(zap.InfoLevel)
+	}
+	logPath := filepath.Join(workingFolder, "slm.log")
+	// delete old file
+	os.Remove(logPath)
+
+	if runtime.GOOS == "windows" {
+		zap.RegisterSink("winfile", func(u *url.URL) (zap.Sink, error) {
+			// Remove leading slash left by url.Parse()
+			return os.OpenFile(u.Path[1:], os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0644)
+		})
+		logPath = "winfile:///" + logPath
+	}
+
+	config.OutputPaths = []string{logPath}
+	config.ErrorOutputPaths = []string{logPath}
+	logger, err := config.Build()
+	if err != nil {
+		fmt.Printf("failed to create logger - %v", err)
+		panic(1)
+	}
+	zap.ReplaceGlobals(logger)
+	return logger
 }

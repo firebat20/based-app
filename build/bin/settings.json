@@ -1,0 +1,35 @@
+{
+ "versions_json_url": "https://raw.githubusercontent.com/blawar/titledb/master/versions.json",
+ "versions_etag": "W/\"dae8f92ef5a32a2c6f60ebc6fed1894a71ce61ffd77f8087fb8ee8beef7b385a\"",
+ "titles_json_url": "https://tinfoil.media/repo/db/titles.json",
+ "titles_etag": "W/\"32e186ee2213dc1:0\"",
+ "prod_keys": "C:\\Users\\X1\\OneDrive\\Desktop\\switch-library-manager 6-16-25",
+ "folder": "C:\\Users\\X1\\Downloads\\Games",
+ "scan_folders": [
+  "C:\\Users\\X1\\Downloads\\games2"
+ ],
+ "gui": false,
+ "debug": false,
+ "check_for_missing_updates": true,
+ "check_for_missing_dlc": true,
+ "hide_missing_games": true,
+ "hide_demo_games": true,
+ "organize_options": {
+  "create_folder_per_game": true,
+  "dlc_folder": "dlcs",
+  "updates_folder": "",
+  "rename_files": true,
+  "delete_empty_folders": true,
+  "delete_old_update_files": true,
+  "folder_name_template": "{TITLE_NAME}",
+  "switch_safe_file_names": true,
+  "file_name_template": "{TITLE_NAME} ({DLC_NAME})[{TITLE_ID}][v{VERSION}]",
+  "process_when_missing_base_game": true
+ },
+ "scan_recursively": true,
+ "gui_page_size": 100,
+ "ignore_dlc_updates": false,
+ "ignore_dlc_title_ids": [],
+ "ignore_update_title_ids": [],
+ "ignore_file_types": []
+}

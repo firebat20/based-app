@@ -3,16 +3,31 @@ package main
 import (
 	"context"
 	"fmt"
+
+	"based-app/db"
+
+	"go.uber.org/zap"
 )
 
 // App struct
 type App struct {
 	ctx context.Context
+	// GUI related fields (populated when running as GUI)
+	baseFolder     string
+	sugarLogger    *zap.SugaredLogger
+	localDbManager *db.LocalSwitchDBManager
+	switchDB       *db.SwitchTitlesDB
+	localDB        *db.LocalSwitchFilesDB
 }
 
 // NewApp creates a new App application struct
 func NewApp() *App {
 	return &App{}
+}
+
+// NewAppWithParams creates an App and assigns GUI-related dependencies.
+func NewAppWithParams(baseFolder string, sugarLogger *zap.SugaredLogger, localDbManager *db.LocalSwitchDBManager) *App {
+	return &App{baseFolder: baseFolder, sugarLogger: sugarLogger, localDbManager: localDbManager}
 }
 
 // startup is called at application startup
