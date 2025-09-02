@@ -41,7 +41,7 @@ jobs:
 
     - name: Fix vulnerabilities
       working-directory: ./frontend
-      run: npm audit fix
+      run: npm audit fix --force
 
     - name: Check Wails setup
       run: wails doctor
