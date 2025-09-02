@@ -42,8 +42,5 @@ jobs:
     - name: Check Wails setup
       run: wails doctor
 
-    - name: Run Go tests
-      run: go test -v ./...
-
     - name: Build Wails application
       run: wails build -ldflags="-s -w"

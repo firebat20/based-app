@@ -31,6 +31,36 @@ func CreateGUI(baseFolder string, sugarLogger *zap.SugaredLogger) *App {
 	// Create an instance of the app structure with params
 	app := NewAppWithParams(baseFolder, sugarLogger, localDbManager)
 
+	// Start background initialization so the switch DB and local library
+	// are loaded while the GUI starts. Runs in a goroutine to avoid
+	// blocking the main thread / wails.Run call.
+	go func() {
+		defer func() {
+			if r := recover(); r != nil {
+				if app.sugarLogger != nil {
+					app.sugarLogger.Errorf("panic during background init: %v", r)
+				}
+			}
+		}()
+
+		if app.localDbManager == nil {
+			if app.sugarLogger != nil {
+				app.sugarLogger.Info("local DB manager not available; skipping background library load")
+			}
+			return
+		}
+
+		// Ensure switch DB is loaded (may download/process titles/versions)
+		if err := app.UpdateDB(); err != nil {
+			if app.sugarLogger != nil {
+				app.sugarLogger.Errorf("UpdateDB error: %v", err)
+			}
+		}
+
+		// Build local DB and emit libraryLoaded event
+		_ = app.UpdateLocalLibrary(false)
+	}()
+
 	// Create application with options
 	runErr := wails.Run(&options.App{
 		Title:             "based-app",
