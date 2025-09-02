@@ -12,5 +12,8 @@
   },
   "windows": {
     "ldflags": "-H=windowsgui"
+  },
+  "linux": {
+    "tags": "webkit2_41"
   }
 }
