@@ -10,7 +10,7 @@ on:
     branches: [ "master" ]
 
 jobs:
- build-windows:
+  build-windows:
     runs-on: windows-latest
     steps:
     - name: Checkout
@@ -34,18 +34,33 @@ jobs:
       with:
         msystem: MINGW64
         update: true
-        pacman: >-
+        install: >-
           mingw-w64-x8_64-gcc
           
     - name: Install Wails
-      run: go install github.com/wailsapp/wails/v2/cmd/wails@latest
+      run: go install github.com/wailsapp/wails/v2/cmd/wails@v2.10.2
 
     - name: Install frontend dependencies
       working-directory: ./frontend
-      run: npm install
+      run: npm ci
+
+    - name: Lint frontend
+      working-directory: ./frontend
+      run: npm run lint
 
     - name: Check Wails setup
       run: wails doctor
+
+    - name: Setup golangci-lint
+      uses: golangci/golangci-lint-action@v8
+      with:
+        version: v2.5.0
+
+    - name: Lint backend
+      run: golangci-lint run
+
+    - name: Test backend
+      run: go test ./...
 
     - name: Build Wails application
       run: wails build -ldflags="-s -w"
