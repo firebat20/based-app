@@ -13,16 +13,22 @@ func FixConsoleOutput() {
 	if runtime.GOOS == "windows" {
 		const ATTACH_PARENT_PROCESS = ^uintptr(0)
 		proc := syscall.MustLoadDLL("kernel32.dll").MustFindProc("AttachConsole")
-		r0, _, err0 := proc.Call(ATTACH_PARENT_PROCESS)
+		r0, _, _ := proc.Call(ATTACH_PARENT_PROCESS)
 
-		if r0 == 0 { // Allocation failed, probably process already has a console
-			fmt.Printf("Could not allocate console: %s. Check build flags..", err0)
-			os.Exit(1)
+		if r0 == 0 {
+			// Failed to attach to parent console. This is normal when:
+			// - Running during Wails binding generation
+			// - Launched from GUI context
+			// - No parent console exists
+			// Silently return instead of treating as fatal error
+			return
 		}
 
 		hout, err1 := syscall.GetStdHandle(syscall.STD_OUTPUT_HANDLE)
 		herr, err2 := syscall.GetStdHandle(syscall.STD_ERROR_HANDLE)
 		if err1 != nil || err2 != nil {
+			// We successfully attached but can't get handles - this IS an error
+			fmt.Printf("Could not get console handles: %v, %v\n", err1, err2)
 			os.Exit(2)
 		}
 
